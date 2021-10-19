@@ -43,7 +43,7 @@ public class KeyboardInterface {
 
   public void setup() {
 
-    // Moouse modes
+    // Mouse modes
     setupAction("draw", "control D", MouseMode.DRAW, (mode) -> userChoices.setActiveStartAndEndPointMode((MouseMode)mode));
     setupAction("select", "control S", MouseMode.SELECT, (mode) -> userChoices.setActiveStartAndEndPointMode((MouseMode)mode));
     setupAction("move", "control M", MouseMode.MOVE, (mode) -> userChoices.setActiveStartAndEndPointMode((MouseMode)mode));

@@ -1,55 +1,46 @@
 package main;
 
-import controller.EventConnector;
 import controller.EventConnectorImpl;
 import controller.KeyboardInterface;
 import controller.MouseHandler;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
+import controller.command.CommandController;
+import controller.interfaces.EventConnector;
+import model.interfaces.Picture;
+import model.interfaces.UserChoices;
 import model.persistence.UserChoicesImpl;
+import model.picture.PictureImpl;
 import view.gui.Gui;
 import view.gui.GuiWindowImpl;
 import view.gui.PaintCanvas;
 import view.interfaces.GuiWindow;
 import view.interfaces.UiModule;
 
+
+/**
+ * The class that contains the main method of that application.  Performs
+ * most of the dependency injection required by the system.
+ */
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
-        PaintCanvas paintCanvas = new PaintCanvas();
+    public static void main(String[] args){
+        Picture picture = new PictureImpl();
+        PaintCanvas paintCanvas = new PaintCanvas(picture);
         GuiWindow guiWindow = new GuiWindowImpl(paintCanvas);
         UiModule uiModule = new Gui(guiWindow);
-        UserChoicesImpl appState = new UserChoicesImpl(uiModule);
-        EventConnector controller = new EventConnectorImpl(uiModule, appState);
+        UserChoices userChoices = new UserChoicesImpl(uiModule);
+        CommandController commandControl = new CommandController(paintCanvas, userChoices, picture);
+        EventConnector controller = new EventConnectorImpl(uiModule, userChoices, commandControl);
 
-        KeyboardInterface keys = new KeyboardInterface(paintCanvas, appState);
+
+        KeyboardInterface keys = new KeyboardInterface(paintCanvas, userChoices);
         keys.setup();
 
-        MouseHandler mouse = new MouseHandler();
+        CommandController c = new CommandController(paintCanvas, userChoices, picture);
+        MouseHandler mouse = new MouseHandler(c);
         paintCanvas.addMouseListener(mouse);
         controller.setup();
 
-        Thread.sleep(500);
 
-        Graphics2D graphics2d = paintCanvas.getGraphics2D();
 
-        // - Begin example: remove after you understand it
 
-        graphics2d.setColor(Color.GREEN);
-        graphics2d.fillRect(12, 13, 200, 400);
-
-        // Outlined rectangle
-        graphics2d.setStroke(new BasicStroke(5));
-        graphics2d.setColor(Color.BLUE);
-        graphics2d.drawRect(12, 13, 200, 400);
-
-        // Selected Shape
-        Stroke stroke = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 1, new float[]{9}, 0);
-        graphics2d.setStroke(stroke);
-        graphics2d.setColor(Color.BLACK);
-        graphics2d.drawRect(7, 8, 210, 410);
-
-        // - End example
     }
 }

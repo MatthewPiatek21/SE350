@@ -29,12 +29,10 @@ dependencies {
 }
 
 //TODO: change to your userid
-def user = 'DWALKE30'
+def user = 'MPiatek1'
 
 task packageDistribution(type: Zip) {
-    doFirst{
-        DirectoryScanner.removeDefaultExclude("**/.gitignore")
-    }
+
     dependsOn check
     archiveFileName = "${user}-${rootProject.name}.zip"
     destinationDirectory = file("$buildDir/dist")
