@@ -1,34 +1,31 @@
 package controller.command;
 
+import controller.ShapeBuilder;
 import controller.interfaces.Command;
 import controller.interfaces.Undoable;
-import model.interfaces.Picture;
-import model.interfaces.Shape;
+import java.awt.Color;
+import model.ShapeShadingType;
+import model.interfaces.Region;
 import model.interfaces.UserChoices;
-import model.picture.Point;
-import model.picture.Triangle;
 import view.gui.PaintCanvas;
+import view.interfaces.Picture;
+import view.interfaces.Shape;
 
-/**
- * CreateShapeCommand is responsible for creating a given shape.
- * It can be stored and executed at any time because it contains all
- * of the information needed to create its assigned shape.
- */
+
 public class CreateShapeCommand implements Command, Undoable {
 
   private Shape shape;
   private UserChoices userChoices;
   private PaintCanvas canvas;
   private Picture picture;
-  private Point start;
-  private Point end;
+  private Region region;
 
-  public CreateShapeCommand(UserChoices userChoices, PaintCanvas canvas, Picture picture, Point start, Point end) {
+
+  public CreateShapeCommand(UserChoices userChoices, PaintCanvas canvas, Picture picture, Region region) {
     this.userChoices = userChoices;
     this.canvas = canvas;
     this.picture = picture;
-    this.start = start;
-    this.end = end;
+    this.region = region;
     CommandHistory.add(this);
   }
 
@@ -44,8 +41,18 @@ public class CreateShapeCommand implements Command, Undoable {
 
   @Override
   public void run() {
-    shape = new Triangle(start, end, userChoices.getActivePrimaryColor());
+    ShapeBuilder builder = new ShapeBuilder();
+    Color fillColor = userChoices.getActivePrimaryColor().value;
+    Color borderColor = userChoices.getActiveSecondaryColor().value;
+    ShapeShadingType shadingType = userChoices.getActiveShapeShadingType();
+    builder
+        .setFillColor(fillColor)
+        .setBorderColor(borderColor)
+        .setShading(shadingType)
+        .setRegion(region)
+        .setType(userChoices.getActiveShapeType());
+
+    shape = builder.build();
     picture.add(shape);
-    //shape = new Triangle(start, end, )
   }
 }

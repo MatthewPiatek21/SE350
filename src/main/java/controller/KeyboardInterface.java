@@ -64,10 +64,9 @@ public class KeyboardInterface {
     target.getActionMap().put(name, new AbstractAction() {
 
       @Override
-      public void actionPerformed(ActionEvent e) {
-        c.accept(mode);
-      }
+      public void actionPerformed(ActionEvent e) {c.accept(mode);}
     });
+
     InputMap inputMap = target.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     inputMap.put(KeyStroke.getKeyStroke(strokeName), name);
   }
