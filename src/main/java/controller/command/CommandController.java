@@ -19,12 +19,14 @@ public class CommandController {
   private final UserChoices choices;
   private final Picture picture;
   private final Clipboard clipboard;
+  private final DeleteManager delete;
 
-  public CommandController(PaintCanvas canvas, UserChoices choices, Picture picture, Clipboard clipboard) {
+  public CommandController(PaintCanvas canvas, UserChoices choices, Picture picture, Clipboard clipboard, DeleteManager delete) {
     this.choices = choices;
     this.canvas = canvas;
     this.picture = picture;
     this.clipboard = clipboard;
+    this.delete = delete;
   }
 
   public void onDraw(Point start, Point end) {
@@ -54,6 +56,8 @@ public class CommandController {
     canvas.repaint();
   }
 
-
+  public void onDelete() {
+    delete.delete();
+  }
   }
 
